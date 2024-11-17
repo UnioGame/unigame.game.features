@@ -16,6 +16,7 @@ namespace Game.Runtime.Services.Bootstrap
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using UnityEngine.SceneManagement;
+    using Object = UnityEngine.Object;
 
     public static class GameBootstrap
     {
@@ -117,17 +118,16 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask<bool> InitializeAsync(ILifeTime lifeTime)
         {
-            var settingsAssetResult = await
-                nameof(GameBootSettings)
+            var settingsAssetResult = await nameof(GameBootSettings)
                     .LoadAssetTaskAsync<GameBootSettings>(lifeTime)
                     .SuppressCancellationThrow();
 
-            if (settingsAssetResult.IsCanceled)
+            if (settingsAssetResult.IsCanceled ||
+                settingsAssetResult.Result == null)
                 return false;
 
-            var settingsAsset = settingsAssetResult.Result;
-            var result = settingsAsset.Result;
-            _settings = result;
+            var result = settingsAssetResult.Result;
+            _settings = Object.Instantiate(result);
 
             return true;
         }
