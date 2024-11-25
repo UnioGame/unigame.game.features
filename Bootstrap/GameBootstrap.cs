@@ -27,6 +27,7 @@ namespace Game.Runtime.Services.Bootstrap
                 { nameof(InitializeAddressableAsync), InitializeAddressableAsync },
                 { nameof(CheckAssetBundleCache), CheckAssetBundleCache },
                 { nameof(InitializeAsync), InitializeAsync },
+                { nameof(ExecuteBootStepsAsync), ExecuteBootStepsAsync },
                 { nameof(LoadBootSceneAsync), LoadBootSceneAsync },
                 { nameof(InitializeServicesAsync), InitializeServicesAsync },
             };
@@ -48,8 +49,7 @@ namespace Game.Runtime.Services.Bootstrap
         {
             InitializeInnerAsync().Forget();
         }
-
-
+        
         public static void Dispose()
         {
             _lifeTime?.Terminate();
@@ -72,9 +72,9 @@ namespace Game.Runtime.Services.Bootstrap
         private static async UniTask<bool> SettingAddressableParametersAsync(IContext lifeTime)
         {
             RemoteModelAsset.Reset();
-            
-            var fileName = "AddressableSettings.json";
-            var loadData = await StreamingAssetsLoader.LoadDataLikeWeb(fileName);
+
+            var fileName = RemoteModelAsset.RemoteSettingsName;
+            var loadData = await StreamingAssetsLoader.LoadDataFromWeb(fileName);
 
             if (loadData.success)
                 RemoteModelAsset.ModelAsset.ParseData(loadData.data);
@@ -121,6 +121,22 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
         
+        private static async UniTask<bool> ExecuteBootStepsAsync(IContext context)
+        {
+            foreach (var bootCommand in _settings.bootCommands)
+            {
+                var result =await bootCommand.ExecuteAsync(context);
+                if(result.success)continue;
+                
+                Debug.LogError($"GameBootstrap: BootCommand Error {bootCommand.GetType().Name} Error: {result.error}");
+                if(result.canContinue) continue;
+                
+                return false;
+            }
+
+            return true;
+        }
+        
         private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
             var lifeTime = context.LifeTime;
@@ -129,7 +145,7 @@ namespace Game.Runtime.Services.Bootstrap
             
             source.AddTo(lifeTime);
             
-            await source.RegisterAsync(_context);
+            await source.RegisterAsync(context);
 
             return true;
         }

@@ -1,10 +1,9 @@
 {
-    "name": "Game.Service.GameSettings.Runtime",
+    "name": "unigame.game.gamesettings.builder",
     "rootNamespace": "",
     "references": [
         "GUID:6cf219c1b8612014a948ff3571a01aac",
         "GUID:2796129a6c23eb84a8181f62bf7332f1",
-        "GUID:44c5a9fbe6286bb4da5426e7a847a8d3",
         "GUID:2e8e8f9303efd84418e2c78dd9a16087",
         "GUID:6632c725b5599b14c865359e6ecc36f4",
         "GUID:8e4577c9194c10845984cf27eb974fd1",
@@ -16,9 +15,13 @@
         "GUID:593a5b492d29ac6448b1ebf7f035ef33",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:f0321ba97c62c974b82a7fc7c1d544f9",
+        "GUID:55591f97a21cae54bbebbe100cbdfb12"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

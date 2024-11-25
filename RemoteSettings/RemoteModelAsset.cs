@@ -104,7 +104,8 @@
                 var url = asset.data.gameDataUrl;
 #if UNITY_WEBGL
                 if(!Application.isEditor)
-                    url = Application.absoluteURL; 
+                    url = Application.absoluteURL;
+                url = url.Replace("index.html",string.Empty);
 #endif
                 url = url.TrimEndPath();
                 _remoteAppUrl = url;
