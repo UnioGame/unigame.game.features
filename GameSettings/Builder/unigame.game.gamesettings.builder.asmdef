@@ -17,8 +17,7 @@
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:560b04d1a97f54a4e82edc0cbbb69285",
         "GUID:f0321ba97c62c974b82a7fc7c1d544f9",
-        "GUID:55591f97a21cae54bbebbe100cbdfb12",
-        "Game.Service.GameSettings.Runtime"
+        "GUID:55591f97a21cae54bbebbe100cbdfb12"
     ],
     "includePlatforms": [
         "Editor"

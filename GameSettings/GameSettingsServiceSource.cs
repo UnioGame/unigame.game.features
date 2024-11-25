@@ -1,6 +1,7 @@
 ﻿namespace Game.Code.Services.GameSettingsService
 {
     using Cysharp.Threading.Tasks;
+    using Sirenix.OdinInspector;
     using UniGame.AddressableTools.Runtime;
     using UniGame.Core.Runtime;
     using UniGame.GameFlow.Runtime.Services;
@@ -17,16 +18,15 @@
     [CreateAssetMenu(menuName = "Game/Services/Settings/GameSettings Service Source", fileName = "GameSettings Service Source")]
     public class GameSettingsServiceSource : DataSourceAsset<IGameSettingsService>
     {
-        public AssetReferenceT<GameSettingsAsset> settingsAsset;
-
+        [InlineEditor]
+        public GameSettingsAsset settingsAsset;
+        
         private GameSettingsService _service;
         
         protected override async UniTask<IGameSettingsService> CreateInternalAsync(IContext context)
         {
             var lifeTime = context.LifeTime;
-            var settingsData = await settingsAsset
-                .LoadAssetInstanceTaskAsync(lifeTime, true);
-            
+            var settingsData = Instantiate(settingsAsset);
             var settings = settingsData.settings;
 
             _service = new GameSettingsService(settings);
@@ -50,6 +50,14 @@
                     _service?.Reset();
                     break;
             }
+        }
+        
+        [Button]
+        public void ApplySettings()
+        {
+            var settingsData = Instantiate(settingsAsset);
+            var settings = settingsData.settings;
+            var service = new GameSettingsService(settings);
         }
 #endif
     }

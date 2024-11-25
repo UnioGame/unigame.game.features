@@ -1,6 +1,7 @@
 ﻿namespace Game.Code.Services.GameSettingsService
 {
     using System;
+    using Sirenix.OdinInspector;
     using UnityEngine;
 
     [Serializable]
@@ -17,6 +18,10 @@
         [Tooltip("target frame under editor for game")]
         public int editorTargetFrameRate = 120;
         
+        [Tooltip("enable screen scale for perfomance optimization")]
+        public bool enableScreenScale = false;
+        
+        [ShowIf(nameof(enableScreenScale))]
         [Tooltip("screen scale for perfomance optimization")]
         [Range(0.2f, 1.0f)]
         public float screenScale = 1.0f;

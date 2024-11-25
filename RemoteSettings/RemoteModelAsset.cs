@@ -15,8 +15,7 @@
     /// <summary>
     /// Game Settings Service Source
     /// </summary>
-    [CreateAssetMenu(menuName = "Game/Services/GameSettings/Remote Settings Asset", 
-        fileName = "Remote Settings Asset")]
+    [CreateAssetMenu(menuName = "Game/Services/Remote Settings/RemoteModelAsset", fileName = "Remote Settings Asset")]
     public class RemoteModelAsset : ScriptableObject
     {
         #region static data

@@ -39,20 +39,26 @@
             
             SetFrameRate(frameRate);
             SetDpiScale(_model.dpiScale.Value);
-            // SetScreenScale(_model.screenScale.Value);
             
             _model.frameRate
                 .Subscribe(SetFrameRate)
                 .AddTo(LifeTime);
-            
-            // _model.screenScale
-            //     .Subscribe(SetScreenScale)
-            //     .AddTo(LifeTime);
+
+            if (defaultData.enableScreenScale)
+            {
+                SetScreenScale(_model.screenScale.Value);
+                _model.screenScale
+                    .Subscribe(SetScreenScale)
+                    .AddTo(LifeTime);
+            }
             
             _model.dpiScale
                 .Subscribe(SetDpiScale)
                 .AddTo(LifeTime);
         }
+        
+        public ScreenResolution DefaultResolution => _defaultResolution;
+        public ScreenResolution ActiveResolution => _activeResolution;
 
         public IReactiveProperty<bool> Profiler => _model.profiler;
         public IReactiveProperty<bool> Console => _model.console;
@@ -60,12 +66,12 @@
         public IReactiveProperty<float> ScreenScale => _model.screenScale;
         public IReactiveProperty<float> DpiScale => _model.dpiScale;
         
-        public void SetFrameRate(int frameRate)
+        public static void SetFrameRate(int frameRate)
         {
             Application.targetFrameRate = frameRate;
         }
         
-        public void SetDpiScale(float scale)
+        public static void SetDpiScale(float scale)
         {
             var targetScale = Mathf.Clamp(scale, 0.1f, 1f);
             QualitySettings.resolutionScalingFixedDPIFactor = targetScale;
@@ -102,7 +108,7 @@
             SetScreenResolution(ref _defaultResolution,true);
         }
         
-        public void SetScreenResolution(ref ScreenResolution screenResolution,bool setRefreshRate = false)
+        public static void SetScreenResolution(ref ScreenResolution screenResolution,bool setRefreshRate = false)
         {
             var resolution = Screen.currentResolution;
             var refreshRate = setRefreshRate ? screenResolution.refreshRate : resolution.refreshRateRatio;
@@ -111,7 +117,7 @@
                 Screen.fullScreenMode,refreshRate);
         }
         
-        public ScreenResolution GetScreenResolution(ref Resolution source)
+        public static ScreenResolution GetScreenResolution(ref Resolution source)
         {
             var target = new ScreenResolution
             {

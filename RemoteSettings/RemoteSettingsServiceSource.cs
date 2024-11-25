@@ -9,7 +9,7 @@
     /// <summary>
     /// Game Settings Service Source
     /// </summary>
-    [CreateAssetMenu(menuName = "Game/Services/GameSettings/Remote Settings Service Source", 
+    [CreateAssetMenu(menuName = "Game/Services/Remote Settings/Remote Settings Service Source", 
         fileName = "Remote Settings Service Source")]
     public class RemoteSettingsServiceSource : DataSourceAsset<IRemoteSettingsService>
     {
