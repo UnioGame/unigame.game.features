@@ -15,9 +15,8 @@
     {
         protected override async UniTask<IRemoteSettingsService> CreateInternalAsync(IContext context)
         {
-            var dataAsset = Resources.Load<RemoteModelAsset>(nameof(RemoteModelAsset));
-            var asset = Instantiate(dataAsset);
-            var gameModel = asset.data;
+            var dataAsset = RemoteModelAsset.ModelAsset;
+            var gameModel = dataAsset.data;
             context.Publish<IRemoteModel>(gameModel);
             return new RemoteSettingsService(gameModel);
         }

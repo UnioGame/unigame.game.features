@@ -1,9 +1,11 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
+    using System.Collections.Generic;
     using Sirenix.OdinInspector;
     using UniGame.Context.Runtime.DataSources;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
+    using Vampire.Game.Modules.tma.features.Bootstrap;
 
 #if UNITY_EDITOR
     using UniModules.Editor;
@@ -18,6 +20,9 @@
         public AssetReference bootScene;
         
         public AssetReferenceT<AsyncDataSources> sources;
+        
+        [SerializeReference]
+        public List<IGameBootCommand> bootCommands = new();
 
 #if UNITY_EDITOR
         [Button]

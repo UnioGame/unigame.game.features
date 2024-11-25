@@ -6,7 +6,8 @@
     using Sirenix.OdinInspector;
     using UniModules;
     using UnityEngine;
-    
+    using Object = UnityEngine.Object;
+
 #if UNITY_EDITOR
     using UnityEditor;
 #endif
@@ -18,24 +19,17 @@
         fileName = "Remote Settings Asset")]
     public class RemoteModelAsset : ScriptableObject
     {
+        #region static data
+        
         private static string _remoteDefaultDataUrl = string.Empty;
         private static string _remoteStreamingAssetDataUrl = string.Empty;
         private static string _buildTargetUrl = string.Empty;
         private static string _remoteVersionUrl = string.Empty;
+        private static string _remoteAppUrl = string.Empty;
 
+        public const string RemoteSettingsName = "RemoteSettings.json";
         public const string EmptyPath = "[EMPTY_REMOTE_ASSET]";
-        
-        [InlineProperty]
-        [HideLabel]
-        [OnValueChanged(nameof(RefreshPreview))]
-        [OnInspectorInit(nameof(RefreshPreview))]
-        public RemoteGameModel data = new();
 
-        [NonSerialized]
-        [OnInspectorGUI]
-        [ReadOnly]
-        private string _demoUrl = string.Empty;
-        
         [Button]
         public void ResetRemote()
         {
@@ -45,7 +39,7 @@
         [Button]
         public void RefreshPreview()
         {
-            _demoUrl = GetRemoteUrl(this.data);
+            _demoUrl = GetAddressableRemoteUrl(this.data);
         }
         
         public static RemoteModelAsset modelAsset;
@@ -60,6 +54,7 @@
             _remoteStreamingAssetDataUrl = string.Empty;
             _buildTargetUrl = string.Empty;
             _remoteVersionUrl = string.Empty;
+            _remoteAppUrl = string.Empty;
         }
 
         public static string BundleUrl
@@ -72,7 +67,7 @@
                 var asset = ModelAsset;
                 if (asset == null) return EmptyPath;
                 
-                var url = GetRemoteUrl(asset.data);
+                var url = GetAddressableRemoteUrl(asset.data);
                 
                 _remoteDefaultDataUrl = url;
                 return _remoteDefaultDataUrl;
@@ -87,27 +82,72 @@
             {
                 if(modelAsset != null) return modelAsset;
                 modelAsset = Resources.Load<RemoteModelAsset>(nameof(RemoteModelAsset));
+                
                 if(modelAsset == null)
                     Debug.LogError("RemoteModelAsset == null");
+                
+                modelAsset = Object.Instantiate(modelAsset);
                 return modelAsset;
             }
         }
         
-        public void ParseData(string data)
+        public static string ApplicationUrl
         {
-            var json = JsonConvert.DeserializeObject<RemoteGameModel>(data);
+            get
+            {
+                if (!string.IsNullOrEmpty(_remoteAppUrl))
+                    return _remoteAppUrl;
+                
+                var asset = ModelAsset;
+                if (asset == null) return EmptyPath;
+                
+                var url = asset.data.gameDataUrl;
+#if UNITY_WEBGL
+                if(!Application.isEditor)
+                    url = Application.absoluteURL; 
+#endif
+                url = url.TrimEndPath();
+                _remoteAppUrl = url;
+                return _remoteAppUrl;
+            }
+        }
+        
+        #endregion
+        
+        #region inspector 
+        
+        [InlineProperty]
+        [HideLabel]
+        [OnValueChanged(nameof(RefreshPreview))]
+        [OnInspectorInit(nameof(RefreshPreview))]
+        public RemoteGameModel data = new();
+
+        [NonSerialized]
+        [OnInspectorGUI]
+        [ReadOnly]
+        private string _demoUrl = string.Empty;
+        
+        #endregion
+
+        public void ParseData(string jsonData)
+        {
+            var modelData = JsonConvert.DeserializeObject<RemoteGameModel>(jsonData);
+            if (modelData == null) return;
             
-            if (json == null) return;
-            
-            _remoteStreamingAssetDataUrl = json.gameDataUrl;
+            ModelAsset.data = modelData;
+            Reset();
         }
 
-        public static string GetRemoteUrl(RemoteGameModel model)
+        public static string GetAddressableRemoteUrl(RemoteGameModel model)
         {
             if (model == null) return EmptyPath;
-            if (!string.IsNullOrEmpty(_remoteStreamingAssetDataUrl)) return _remoteStreamingAssetDataUrl;
-            var url = model.gameDataUrl;
-            url = url.TrimEndPath();
+            if (!string.IsNullOrEmpty(_remoteStreamingAssetDataUrl)) 
+                return _remoteStreamingAssetDataUrl;
+
+            if (model.overrideAddressableUrl)
+                return model.addressableUrl;
+            
+            var url = ApplicationUrl;
 
             if (model.addBuildTarget)
             {
@@ -123,8 +163,8 @@
             if(model.addGameVersion)
                 url = $"{url}/{Application.version}";
                 
-            if(!string.IsNullOrEmpty(model.remoteFolder))
-                url = $"{url}/{model.remoteFolder}";
+            if(!string.IsNullOrEmpty(model.addressablePath))
+                url = $"{url}/{model.addressablePath}";
 
             return url;
         }

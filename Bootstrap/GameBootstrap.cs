@@ -20,10 +20,9 @@ namespace Game.Runtime.Services.Bootstrap
 
     public static class GameBootstrap
     {
-        private static Dictionary<string, Func<ILifeTime, UniTask<bool>>> _bootStages
+        private static Dictionary<string, Func<IContext, UniTask<bool>>> _bootStages
             = new()
             {
-                { nameof(OnSetupAsync), OnSetupAsync },
                 { nameof(SettingAddressableParametersAsync), SettingAddressableParametersAsync },
                 { nameof(InitializeAddressableAsync), InitializeAddressableAsync },
                 { nameof(CheckAssetBundleCache), CheckAssetBundleCache },
@@ -56,7 +55,7 @@ namespace Game.Runtime.Services.Bootstrap
             _lifeTime?.Terminate();
         }
 
-        private static async UniTask<bool> CheckAssetBundleCache(ILifeTime lifeTime)
+        private static async UniTask<bool> CheckAssetBundleCache(IContext lifeTime)
         {
             var version = PlayerPrefs.GetString(nameof(Application.version), string.Empty);
             if(string.Equals(version, Application.version)) return true;
@@ -70,7 +69,7 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
 
-        private static async UniTask<bool> SettingAddressableParametersAsync(ILifeTime lifeTime)
+        private static async UniTask<bool> SettingAddressableParametersAsync(IContext lifeTime)
         {
             RemoteModelAsset.Reset();
             
@@ -83,14 +82,14 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
 
-        private static async UniTask<bool> InitializeAddressableAsync(ILifeTime lifeTime)
+        private static async UniTask<bool> InitializeAddressableAsync(IContext lifeTime)
         {
             await Addressables.InitializeAsync();
             GameLog.Log("Addressable initialized");
             return true;
         }
         
-        private static async UniTask<bool> LoadBootSceneAsync(ILifeTime lifeTime)
+        private static async UniTask<bool> LoadBootSceneAsync(IContext lifeTime)
         {
             var bootSceneEnabled = _settings.bootSceneEnabled;
 #if UNITY_EDITOR
@@ -99,27 +98,17 @@ namespace Game.Runtime.Services.Bootstrap
             if (!bootSceneEnabled) return true;
             
             _settings.bootScene
-                .LoadSceneTaskAsync(lifeTime, LoadSceneMode.Single,true)
+                .LoadSceneTaskAsync(lifeTime.LifeTime, LoadSceneMode.Single,true)
                 .Forget();
             
             return true;
         }
 
-        private static UniTask<bool> OnSetupAsync(ILifeTime lifeTime)
-        {
-            _lifeTime ??= new LifeTimeDefinition();
-            _lifeTime.Release();
-            _context = new EntityContext().AddTo(_lifeTime);
-            
-            GameContext.Context = _context;
-            
-            return UniTask.FromResult(true);
-        }
 
-        private static async UniTask<bool> InitializeAsync(ILifeTime lifeTime)
+        private static async UniTask<bool> InitializeAsync(IContext context)
         {
             var settingsAssetResult = await nameof(GameBootSettings)
-                    .LoadAssetTaskAsync<GameBootSettings>(lifeTime)
+                    .LoadAssetTaskAsync<GameBootSettings>(context.LifeTime)
                     .SuppressCancellationThrow();
 
             if (settingsAssetResult.IsCanceled ||
@@ -132,10 +121,14 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
         
-        private static async UniTask<bool> InitializeServicesAsync(ILifeTime lifeTime)
+        private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
-            var source = await _settings.sources.LoadAssetInstanceTaskAsync<AsyncDataSources>(lifeTime, true);
+            var lifeTime = context.LifeTime;
+            var source = await _settings.sources
+                .LoadAssetInstanceTaskAsync<AsyncDataSources>(lifeTime, true);
+            
             source.AddTo(lifeTime);
+            
             await source.RegisterAsync(_context);
 
             return true;
@@ -143,6 +136,12 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask InitializeInnerAsync()
         {
+            _lifeTime.Release();
+            _lifeTime = new LifeTimeDefinition();
+            _context = new EntityContext().AddTo(_lifeTime);
+            
+            GameContext.Context = _context;
+            
             foreach (var stage in _bootStages)
             {
                 var stageName = stage.Key;
@@ -150,7 +149,7 @@ namespace Game.Runtime.Services.Bootstrap
 
                 GameLog.Log($"Game Boot STAGE Execute: {stageName}");
 
-                var stageResult = await stageFunc.Invoke(_lifeTime);
+                var stageResult = await stageFunc.Invoke(_context);
                 if (!stageResult)
                 {
                     Debug.LogError($"Game Boot STAGE ERROR: {stageName}");

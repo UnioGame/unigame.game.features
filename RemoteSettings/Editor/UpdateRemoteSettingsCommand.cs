@@ -1,6 +1,7 @@
 ﻿namespace Game.Runtime.Services.RemoteSettingsService.Editor
 {
     using System;
+    using System.IO;
     using GameSettings;
     using Newtonsoft.Json;
     using Sirenix.OdinInspector;
@@ -15,7 +16,7 @@
         [InlineProperty]
         [HideLabel]
         public RemoteGameModel remoteData = new();
-        
+
         [NonSerialized]
         [OnInspectorGUI]
         [ReadOnly]
@@ -25,7 +26,7 @@
         [Button]
         public void RefreshPreview()
         {
-            _demoUrl = RemoteModelAsset.GetRemoteUrl(this.remoteData);
+            _demoUrl = RemoteModelAsset.GetAddressableRemoteUrl(this.remoteData);
         }
         
         public override void Execute(IUniBuilderConfiguration buildParameters)
@@ -44,6 +45,20 @@
             
             settings.data = remoteData;
             settings.SaveAsset();
+            
+            Execute(settings);
+            
+            settings.SaveAsset();
+        }
+
+        public void Execute(RemoteModelAsset remoteModelAsset)
+        {
+            remoteModelAsset.ResetRemote();
+            
+            var path = Path.Combine(Application.streamingAssetsPath,RemoteModelAsset.RemoteSettingsName);
+            var jsonData = JsonConvert.SerializeObject(remoteData, Formatting.Indented);
+            
+            File.WriteAllText(path, jsonData);
         }
     }
 }
