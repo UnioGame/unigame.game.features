@@ -150,19 +150,22 @@
             
             var url = ApplicationUrl;
 
-            if (model.addBuildTarget)
+            if (!model.useRelatedUrl)
             {
+                if (model.addBuildTarget)
+                {
 #if UNITY_EDITOR
-                url = $"{url}/{EditorUserBuildSettings.activeBuildTarget.ToString()}";
+                    url = $"{url}/{EditorUserBuildSettings.activeBuildTarget.ToString()}";
 #else
                 url = $"{url}/{Application.platform.ToString()}";
 #endif
-            }
+                }
 
-            url = url.TrimEndPath();
+                url = url.TrimEndPath();
                 
-            if(model.addGameVersion)
-                url = $"{url}/{Application.version}";
+                if(model.addGameVersion)
+                    url = $"{url}/{Application.version}";
+            }
                 
             if(!string.IsNullOrEmpty(model.addressablePath))
                 url = $"{url}/{model.addressablePath}";
