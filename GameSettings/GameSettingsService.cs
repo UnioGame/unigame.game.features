@@ -108,13 +108,26 @@
             SetScreenResolution(ref _defaultResolution,true);
         }
         
-        public static void SetScreenResolution(ref ScreenResolution screenResolution,bool setRefreshRate = false)
+        
+        public void SetScreenResolution(int width, int height)
+        {
+            var resolution = Screen.currentResolution;
+            var refreshRate = resolution.refreshRateRatio;
+            
+            Screen.SetResolution(width, height, Screen.fullScreenMode,refreshRate);
+
+            _activeResolution = GetScreenResolution(ref resolution);
+        }
+        
+        public void SetScreenResolution(ref ScreenResolution screenResolution,bool setRefreshRate = false)
         {
             var resolution = Screen.currentResolution;
             var refreshRate = setRefreshRate ? screenResolution.refreshRate : resolution.refreshRateRatio;
             
             Screen.SetResolution(screenResolution.width, screenResolution.height,
                 Screen.fullScreenMode,refreshRate);
+
+            _activeResolution = GetScreenResolution(ref resolution);
         }
         
         public static ScreenResolution GetScreenResolution(ref Resolution source)

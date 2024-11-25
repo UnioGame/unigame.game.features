@@ -13,5 +13,9 @@
         IReactiveProperty<int> FrameRate { get; }
         IReactiveProperty<float> ScreenScale { get; }
         IReactiveProperty<float> DpiScale { get; }
+
+        void SetScreenResolution(ref ScreenResolution screenResolution, bool setRefreshRate = false);
+
+        void SetScreenResolution(int width, int height);
     }
 }
