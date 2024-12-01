@@ -2,9 +2,8 @@ namespace Game.Runtime.Services.Bootstrap
 {
     using System;
     using System.Collections.Generic;
-    using AddressablesSource;
     using Cysharp.Threading.Tasks;
-    using Game.GameSettings;
+    using GameSettings;
     using Runtime.Bootstrap;
     using Tools;
     using UniCore.Runtime.ProfilerTools;
@@ -74,7 +73,7 @@ namespace Game.Runtime.Services.Bootstrap
             RemoteModelAsset.Reset();
             
             var fileName = "AddressableSettings.json";
-            var loadData = await StreamingAssetsLoader.LoadDataLikeWeb(fileName);
+            var loadData = await StreamingAssetsLoader.LoadDataFromWeb(fileName);
 
             if (loadData.success)
                 RemoteModelAsset.ModelAsset.ParseData(loadData.data);
