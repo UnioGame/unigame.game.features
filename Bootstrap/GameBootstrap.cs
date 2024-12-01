@@ -135,7 +135,7 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask InitializeInnerAsync()
         {
-            _lifeTime.Release();
+            _lifeTime?.Release();
             _lifeTime = new LifeTimeDefinition();
             _context = new EntityContext().AddTo(_lifeTime);
             
