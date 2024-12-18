@@ -2,13 +2,10 @@
     "name": "game.services.web.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:e59bf9fc7d5a44b18a819a92edd46163",
-        "GUID:e06a58708b83247ca9dc984644f5b40b",
         "GUID:d8b63aba1907145bea998dd612889d6b",
         "GUID:2665a8d13d1b3f18800f46e256720795",
         "GUID:e0cd26848372d4e5c891c569017e11f1",
         "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:b10aac27e5bc3d74f9892b100a74487f",
         "GUID:8e4577c9194c10845984cf27eb974fd1",
         "GUID:a0b431bd9232ee0439a3722ec36414ed",
         "GUID:9f8e6b2872ac2ca4683e584b9ba21f29",
@@ -18,7 +15,6 @@
         "GUID:94b76ab488496fe4ba2e594d6c583770",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:2796129a6c23eb84a8181f62bf7332f1",
-        "GUID:4185675af2c91ce438157b41079cd107",
         "GUID:f0321ba97c62c974b82a7fc7c1d544f9",
         "GUID:d9e07855fdd14b7e8dd295edb57aa69b"
     ],
