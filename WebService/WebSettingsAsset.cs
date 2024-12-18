@@ -32,10 +32,7 @@
             var path = Path.Combine(Application.streamingAssetsPath, configuration.webServiceSettingsPath);
             File.WriteAllText(path, json);
             GameLog.Log("Settings exported to: " + path, Color.green);
-#endif
-            
         }
-        
-
+#endif
     }
 }
