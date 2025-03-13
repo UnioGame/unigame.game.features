@@ -101,8 +101,8 @@ namespace Game.Runtime.Services.WebService
             loadFromWeb = true;  
 #endif
             var result = loadFromWeb 
-                ? await StreamingAssetsLoader.LoadDataFromWeb(configuration.webServiceSettingsPath)
-                : await StreamingAssetsLoader.LoadDataFromFile(configuration.webServiceSettingsPath);
+                ? await StreamingAssetsUtils.LoadDataFromWeb(configuration.webServiceSettingsPath)
+                : await StreamingAssetsUtils.LoadDataFromFile(configuration.webServiceSettingsPath);
             
             var data = JsonConvert.DeserializeObject<WebSettingsPublicData>(result.data);
             return data ?? new WebSettingsPublicData();
