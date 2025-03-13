@@ -98,7 +98,7 @@ namespace Game.Runtime.Services.Bootstrap
             RemoteModelAsset.Reset();
 
             var fileName = RemoteModelAsset.RemoteSettingsName;
-            var loadData = await StreamingAssetsLoader.LoadDataFromWeb(fileName);
+            var loadData = await StreamingAssetsUtils.LoadDataFromWeb(fileName);
 
             if (loadData.success)
                 RemoteModelAsset.ModelAsset.ParseData(loadData.data);
