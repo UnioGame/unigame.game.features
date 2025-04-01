@@ -1,0 +1,23 @@
+{
+  "name": "com.kontora.networkchecker",
+  "author": "KONTORA GAMES",
+  "displayName": "Network Checker",
+  "description": "Check Internet Connection and Network Type",
+  "unity": "2022.1",
+  "version": "2025.0.0",
+  "keywords": [
+    "UniGame",
+    "Modules",
+    "Tools",
+    "Features",
+    "Network",
+    "Internet",
+    "Service"
+  ],
+  "homepage": "",
+  "dependencies": {
+    "com.unity.addressables": "1.21.17",
+    "com.unity.editorcoroutines": "1.0.0",
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}

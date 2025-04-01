@@ -3,7 +3,7 @@ namespace Game.Runtime.Services.Bootstrap
     using System;
     using System.Collections.Generic;
     using Cysharp.Threading.Tasks;
-    using Game.GameSettings;
+    using GameSettings;
     using Runtime.Bootstrap;
     using Tools;
     using UniCore.Runtime.ProfilerTools;
