@@ -2,8 +2,8 @@
 {
     using System;
     using UniGame.UniBuild.Editor.ClientBuild.Interfaces;
+    using UniGame.UniBuild.Editor.Commands.PreBuildCommands;
     using UniModules.Editor;
-    using UniModules.UniGame.UniBuild.Editor.ClientBuild.Commands.PreBuildCommands;
 
     [Serializable]
     public class GameSettingsCommand : UnitySerializablePreBuildCommand

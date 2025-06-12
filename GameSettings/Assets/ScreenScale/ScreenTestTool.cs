@@ -6,8 +6,7 @@ namespace GameSettings.Test
     using Game.Code.Services.GameSettingsService;
     using Sirenix.OdinInspector;
     using TMPro;
-    using UniGame.Context.Runtime.Extension;
-    using UniModules.UniGame.Context.Runtime.Context;
+    using UniGame.Context.Runtime;
     using UnityEngine.UI;
 
     public class ScreenTestTool : MonoBehaviour
@@ -33,7 +32,8 @@ namespace GameSettings.Test
 
         private async UniTask InitializeAsync()
         {
-            var context =await GameContext.GetContextAsync(destroyCancellationToken);
+            var context =await GameContext
+                .GetContextAsync(destroyCancellationToken);
             _gameSettingsService = await context
                 .ReceiveFirstAsync<IGameSettingsService>();
             

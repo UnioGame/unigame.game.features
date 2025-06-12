@@ -1,6 +1,6 @@
 ﻿namespace Game.Runtime.Services.DebugService
 {
-    using UniGame.GameFlow.Runtime.Interfaces;
+    using UniGame.GameFlow.Runtime;
 
     public interface IDebugService : IGameService
     {

@@ -2,7 +2,7 @@
 {
     using System;
     using Sirenix.OdinInspector;
-    using UniModules.UniGame.Core.Runtime.Rx;
+    using UniGame.Runtime.Rx;
 
     [Serializable]
     public class GameSettingsModel

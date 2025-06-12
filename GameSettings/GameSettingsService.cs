@@ -1,9 +1,10 @@
 ﻿namespace Game.Code.Services.GameSettingsService
 {
     using System;
+    using R3;
     using Services.GameSettings.Data;
+    using UniGame.Runtime.Rx;
     using UniGame.UniNodes.GameFlow.Runtime;
-    using UniRx;
     using UnityEngine;
 
     [Serializable]
@@ -60,11 +61,11 @@
         public ScreenResolution DefaultResolution => _defaultResolution;
         public ScreenResolution ActiveResolution => _activeResolution;
 
-        public IReactiveProperty<bool> Profiler => _model.profiler;
-        public IReactiveProperty<bool> Console => _model.console;
-        public IReactiveProperty<int> FrameRate => _model.frameRate;
-        public IReactiveProperty<float> ScreenScale => _model.screenScale;
-        public IReactiveProperty<float> DpiScale => _model.dpiScale;
+        public ReactiveValue<bool> Profiler => _model.profiler;
+        public ReactiveValue<bool> Console => _model.console;
+        public ReactiveValue<int> FrameRate => _model.frameRate;
+        public ReactiveValue<float> ScreenScale => _model.screenScale;
+        public ReactiveValue<float> DpiScale => _model.dpiScale;
         
         public static void SetFrameRate(int frameRate)
         {

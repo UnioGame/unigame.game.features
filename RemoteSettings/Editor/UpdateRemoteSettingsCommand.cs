@@ -6,8 +6,8 @@
     using Newtonsoft.Json;
     using Sirenix.OdinInspector;
     using UniGame.UniBuild.Editor.ClientBuild.Interfaces;
+    using UniGame.UniBuild.Editor.Commands.PreBuildCommands;
     using UniModules.Editor;
-    using UniModules.UniGame.UniBuild.Editor.ClientBuild.Commands.PreBuildCommands;
     using UnityEngine;
 
     [Serializable]

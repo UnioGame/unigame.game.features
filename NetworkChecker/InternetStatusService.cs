@@ -1,8 +1,9 @@
 namespace VN.Game.Runtime.Services
 {
     using System;
-    using Cysharp.Threading.Tasks;using UniGame.UniNodes.GameFlow.Runtime;
-    using UniRx;
+    using Cysharp.Threading.Tasks;
+    using R3;
+    using UniGame.UniNodes.GameFlow.Runtime;
     using UnityEngine;
     using UnityEngine.Networking;
 
@@ -25,7 +26,7 @@ namespace VN.Game.Runtime.Services
                 AutoCheckInternetLoop().Forget();
         }
         
-        public IObservable<NetworkCheckResult> InternetCheckStream => _onInternetCheck;
+        public Observable<NetworkCheckResult> InternetCheckStream => _onInternetCheck;
 
         public async UniTask FireNoInternetNotification(string error)
         {
