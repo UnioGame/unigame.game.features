@@ -6,6 +6,7 @@ namespace VN.Game.Runtime.Services
     using UniGame.UniNodes.GameFlow.Runtime;
     using UnityEngine;
     using UnityEngine.Networking;
+    using ZLinq;
 
     [Serializable]
     public class InternetStatusService : GameService, INetworkStatusService
@@ -87,7 +88,55 @@ namespace VN.Game.Runtime.Services
 
         public async UniTask<NetworkCheckResult> CheckInternet()
         {
-            return await CheckInternet(_configuration.internetCheckUrl);
+            if (_configuration.internetCheckUrl.Length <= 0)
+            {
+                return new NetworkCheckResult()
+                {
+                    IsSuccess = true,
+                    Url = string.Empty,
+                    Duration = 0,
+                    Error = string.Empty,
+                };
+            }
+            
+            var checkTasks = _configuration
+                .internetCheckUrl
+                .Select(CheckInternet);
+
+            var results = await UniTask.WhenAll(checkTasks);
+            var failedCount = 0;
+            var successCount = 0;
+            
+            var lastFailed = new NetworkCheckResult();
+            var lastSuccess = new NetworkCheckResult()
+            {
+                IsSuccess = false,
+                Url = string.Empty,
+                Duration = 0,
+                Error = string.Empty,
+            };
+            
+            for (var i = 0; i < results.Length; i++)
+            {
+                var checkResult = results[i];
+
+                if (checkResult.IsSuccess)
+                {
+                    successCount++;
+                }
+                else
+                {
+                    failedCount++;
+                }
+
+                lastFailed = checkResult.IsSuccess == false ? checkResult : lastFailed;
+                lastSuccess = checkResult.IsSuccess ? checkResult : lastSuccess;
+            }
+
+            if (failedCount == results.Length)
+                return lastFailed;
+            
+            return lastSuccess;
         }
         
         
