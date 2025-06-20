@@ -6,7 +6,6 @@ namespace VN.Game.Runtime.Services
     using UniGame.UniNodes.GameFlow.Runtime;
     using UnityEngine;
     using UnityEngine.Networking;
-    using ZLinq;
 
     [Serializable]
     public class InternetStatusService : GameService, INetworkStatusService
