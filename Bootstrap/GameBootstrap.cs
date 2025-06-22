@@ -8,10 +8,10 @@ namespace Game.Runtime.Services.Bootstrap
     using Tools;
     using UniCore.Runtime.ProfilerTools;
     using UniGame.AddressableTools.Runtime;
+    using UniGame.Context.Runtime;
     using UniGame.Context.Runtime.DataSources;
     using UniGame.Core.Runtime;
-    using UniModules.UniCore.Runtime.DataFlow;
-    using UniModules.UniGame.Context.Runtime.Context;
+    using UniGame.Runtime.DataFlow;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
     using UnityEngine.SceneManagement;
@@ -30,7 +30,7 @@ namespace Game.Runtime.Services.Bootstrap
                 { nameof(InitializeServicesAsync), InitializeServicesAsync },
             };
 
-        private static LifeTimeDefinition _lifeTime;
+        private static LifeTime _lifeTime;
         private static EntityContext _context;
         private static GameBootSettings _settings;
 
@@ -50,15 +50,16 @@ namespace Game.Runtime.Services.Bootstrap
 
         public static void Dispose()
         {
-            _lifeTime?.Terminate();
+            _lifeTime?.Release();
         }
         
         private static async UniTask InitializeInnerAsync()
         {
             _lifeTime?.Release();
-            _lifeTime = new LifeTimeDefinition();
-            _context = new EntityContext().AddTo(_lifeTime);
-
+            _lifeTime = new ();
+            _context = new EntityContext();
+            _context.AddTo(_lifeTime);
+            
             GameContext.Context = _context;
 
             foreach (var stage in _bootStages)
@@ -164,11 +165,10 @@ namespace Game.Runtime.Services.Bootstrap
         private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
             var lifeTime = context.LifeTime;
-            var source = await _settings.sources
+            var source = await _settings
+                .sources
                 .LoadAssetInstanceTaskAsync<AsyncDataSources>(lifeTime, true);
-
-            source.AddTo(lifeTime);
-
+            
             await source.RegisterAsync(context);
 
             return true;

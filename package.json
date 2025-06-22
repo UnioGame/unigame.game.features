@@ -4,12 +4,13 @@
   "displayName": "UniGame Game Features",
   "description": "Game Features Collection",
   "unity": "2023.1",
-  "version": "2025.0.0",
+  "version": "2025.0.1",
   "keywords": [
     "UniGame",
     "Modules",
     "Tools",
-    "Features"
+    "Features",
+    "Bootstrap"
   ],
   "homepage": "https://github.com/UnioGame/game.features#readme",
   "dependencies": {
