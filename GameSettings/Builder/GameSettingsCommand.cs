@@ -1,12 +1,12 @@
 ﻿namespace Game.Code.Services.GameSettingsService.Builder
 {
     using System;
-    using UniGame.UniBuild.Editor.ClientBuild.Interfaces;
-    using UniGame.UniBuild.Editor.Commands.PreBuildCommands;
+    using UniGame.UniBuild.Editor;
+    using UniGame.UniBuild.Editor.Commands;
     using UniModules.Editor;
 
     [Serializable]
-    public class GameSettingsCommand : UnitySerializablePreBuildCommand
+    public class GameSettingsCommand : SerializableBuildCommand
     {
         public bool console = true;
         public bool profiler = true;

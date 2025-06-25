@@ -5,8 +5,8 @@
     using GameSettings;
     using Newtonsoft.Json;
     using Sirenix.OdinInspector;
-    using UniGame.UniBuild.Editor.ClientBuild.Interfaces;
-    using UniGame.UniBuild.Editor.Commands.PreBuildCommands;
+    using UniGame.UniBuild.Editor;
+    using UniGame.UniBuild.Editor.Commands;
     using UniModules.Editor;
     using UnityEngine;
 
