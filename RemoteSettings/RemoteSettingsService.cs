@@ -2,7 +2,7 @@
 {
     using System;
     using Runtime;
-    using UniGame.UniNodes.GameFlow.Runtime;
+    using UniGame.GameFlow.Runtime;
 
     [Serializable]
     public class RemoteSettingsService : GameService, IRemoteSettingsService
