@@ -165,12 +165,8 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
-            var lifeTime = context.LifeTime;
-            var source = await _settings
-                .sources
-                .LoadAssetInstanceTaskAsync<AsyncDataSources>(lifeTime, true);
-            
-            await source.RegisterAsync(context);
+            await _settings
+                .sources.RegisterAsync(context);
 
             return true;
         }
