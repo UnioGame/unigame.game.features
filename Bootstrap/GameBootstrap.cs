@@ -9,7 +9,6 @@ namespace Game.Runtime.Services.Bootstrap
     using UniCore.Runtime.ProfilerTools;
     using UniGame.AddressableTools.Runtime;
     using UniGame.Context.Runtime;
-    using UniGame.Context.Runtime.DataSources;
     using UniGame.Core.Runtime;
     using UniGame.Runtime.DataFlow;
     using UnityEngine;
@@ -132,15 +131,17 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask<bool> InitializeAsync(IContext context)
         {
-            var settingsAssetResult = await nameof(GameBootSettings)
-                .LoadAssetTaskAsync<GameBootSettings>(context.LifeTime)
-                .SuppressCancellationThrow();
+            var settingsResource = Resources.Load<GameBootSettings>(nameof(GameBootSettings));
+            
+            var settingsAssetResult = settingsResource != null ?
+                settingsResource
+                : await nameof(GameBootSettings)
+                .LoadAssetTaskAsync<GameBootSettings>(context.LifeTime);
 
-            if (settingsAssetResult.IsCanceled ||
-                settingsAssetResult.Result == null)
+            if (settingsAssetResult == null)
                 return false;
 
-            var result = settingsAssetResult.Result;
+            var result = settingsAssetResult;
             _settings = Object.Instantiate(result);
 
             return true;
