@@ -114,17 +114,18 @@ namespace Game.Runtime.Services.Bootstrap
         
         private static async UniTask<bool> InitializeAsync(IContext context)
         {
-            var settingsResource = Resources.Load<GameBootSettings>(nameof(GameBootSettings));
-            
-            var settingsAssetResult = settingsResource != null ?
-                settingsResource
-                : await nameof(GameBootSettings)
+            var settingsResource = await nameof(GameBootSettings)
                 .LoadAssetTaskAsync<GameBootSettings>(context.LifeTime);
+            
+            if (settingsResource == null)
+            {
+                settingsResource = Resources.Load<GameBootSettings>(string.Empty);
+            }
 
-            if (settingsAssetResult == null)
+            if (settingsResource == null)
                 return false;
 
-            var result = settingsAssetResult;
+            var result = settingsResource;
             _settings = Object.Instantiate(result);
 
             return true;
