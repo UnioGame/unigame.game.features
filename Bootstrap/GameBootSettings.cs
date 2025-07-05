@@ -1,10 +1,10 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
+    using System;
     using System.Collections.Generic;
     using Sirenix.OdinInspector;
     using UniGame.Context.Runtime;
     using UnityEngine;
-    using UnityEngine.AddressableAssets;
     using Vampire.Game.Modules.tma.features.Bootstrap;
 
 #if UNITY_EDITOR
@@ -14,13 +14,14 @@
     [CreateAssetMenu(menuName = "UniGame/Features/Game Boot Settings", fileName = nameof(GameBootSettings))]
     public class GameBootSettings : ScriptableObject
     {
-        public bool bootSceneEnabled = true;
+        [Header("Service Sources")]
+        public AsyncDataSources[] dataSources = Array.Empty<AsyncDataSources>();
         
-        [ShowIf(nameof(bootScene))]
-        public AssetReference bootScene;
+        [InlineProperty]
+        [HideLabel]
+        public AsyncContextSource defaultSource = new();
         
-        public AsyncContextSource sources = new();
-        
+        [Header("Commands")]
         [SerializeReference]
         public List<IGameBootCommand> bootCommands = new();
 

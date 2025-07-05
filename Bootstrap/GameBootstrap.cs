@@ -2,6 +2,7 @@ namespace Game.Runtime.Services.Bootstrap
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Cysharp.Threading.Tasks;
     using GameSettings;
     using Runtime.Bootstrap;
@@ -13,7 +14,6 @@ namespace Game.Runtime.Services.Bootstrap
     using UniGame.Runtime.DataFlow;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
-    using UnityEngine.SceneManagement;
     using Object = UnityEngine.Object;
 
     public static class GameBootstrap
@@ -25,7 +25,6 @@ namespace Game.Runtime.Services.Bootstrap
                 { nameof(CheckAssetBundleCache), CheckAssetBundleCache },
                 { nameof(InitializeAsync), InitializeAsync },
                 { nameof(ExecuteBootStepsAsync), ExecuteBootStepsAsync },
-                { nameof(LoadBootSceneAsync), LoadBootSceneAsync },
                 { nameof(InitializeServicesAsync), InitializeServicesAsync },
             };
 
@@ -112,23 +111,7 @@ namespace Game.Runtime.Services.Bootstrap
             GameLog.Log("Addressable initialized");
             return true;
         }
-
-        private static async UniTask<bool> LoadBootSceneAsync(IContext lifeTime)
-        {
-            var bootSceneEnabled = _settings.bootSceneEnabled;
-#if UNITY_EDITOR
-            bootSceneEnabled = false;
-#endif
-            if (!bootSceneEnabled) return true;
-
-            _settings.bootScene
-                .LoadSceneTaskAsync(lifeTime.LifeTime, LoadSceneMode.Single, true)
-                .Forget();
-
-            return true;
-        }
-
-
+        
         private static async UniTask<bool> InitializeAsync(IContext context)
         {
             var settingsResource = Resources.Load<GameBootSettings>(nameof(GameBootSettings));
@@ -165,8 +148,11 @@ namespace Game.Runtime.Services.Bootstrap
 
         private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
-            await _settings
-                .sources.RegisterAsync(context);
+            var sources = _settings.dataSources
+                .Select(x => x.RegisterAsync(context))
+                .Concat(Enumerable.Repeat(_settings.defaultSource.RegisterAsync(context), 1));
+            
+            await UniTask.WhenAll(sources);
 
             return true;
         }
