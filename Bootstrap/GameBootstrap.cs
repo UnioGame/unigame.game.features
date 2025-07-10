@@ -48,12 +48,12 @@ namespace Game.Runtime.Services.Bootstrap
 
         public static void Dispose()
         {
-            _lifeTime?.Release();
+            _lifeTime?.Terminate();
         }
         
         private static async UniTask InitializeInnerAsync()
         {
-            _lifeTime?.Release();
+            _lifeTime?.Terminate();
             _lifeTime = new ();
             _context = new EntityContext();
             _context.AddTo(_lifeTime);
