@@ -1,11 +1,10 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
-    using System;
     using System.Collections.Generic;
     using Sirenix.OdinInspector;
     using UniGame.Context.Runtime;
     using UnityEngine;
-    using Vampire.Game.Modules.tma.features.Bootstrap;
+    using UniGame.Features.Bootstrap;
 
 #if UNITY_EDITOR
     using UniModules.Editor;
@@ -15,15 +14,14 @@
     public class GameBootSettings : ScriptableObject
     {
         [Header("Service Sources")]
-        public AsyncDataSources[] dataSources = Array.Empty<AsyncDataSources>();
-        
         [InlineProperty]
         [HideLabel]
-        public AsyncContextSource defaultSource = new();
+        public AsyncContextSource source = new();
         
         [Header("Commands")]
         [SerializeReference]
-        public List<IGameBootCommand> bootCommands = new();
+        [Tooltip("Commands to execute before game initialization, e.g. loading assets, initializing services, etc.")]
+        public List<IGameBootCommand> gameInitCommands = new();
 
 #if UNITY_EDITOR
         [Button]
