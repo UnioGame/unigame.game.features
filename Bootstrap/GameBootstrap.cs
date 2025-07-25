@@ -2,11 +2,8 @@ namespace Game.Runtime.Services.Bootstrap
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Cysharp.Threading.Tasks;
-    using GameSettings;
     using Runtime.Bootstrap;
-    using Tools;
     using UniCore.Runtime.ProfilerTools;
     using UniGame.AddressableTools.Runtime;
     using UniGame.Context.Runtime;
@@ -14,19 +11,18 @@ namespace Game.Runtime.Services.Bootstrap
     using UniGame.Runtime.DataFlow;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
+    using UniGame.Features.Bootstrap;
     using Object = UnityEngine.Object;
 
     public static class GameBootstrap
     {
         private static Dictionary<string, Func<IContext, UniTask<bool>>> _bootStages = new()
-            {
-                { nameof(SettingAddressableParametersAsync), SettingAddressableParametersAsync },
-                { nameof(InitializeAddressableAsync), InitializeAddressableAsync },
-                { nameof(CheckAssetBundleCache), CheckAssetBundleCache },
-                { nameof(InitializeAsync), InitializeAsync },
-                { nameof(ExecuteBootStepsAsync), ExecuteBootStepsAsync },
-                { nameof(InitializeServicesAsync), InitializeServicesAsync },
-            };
+        {
+            { nameof(InitializeAddressableAsync), InitializeAddressableAsync },
+            { nameof(InitializeAsync), InitializeAsync },
+            { nameof(ExecuteBootInitStepsAsync), ExecuteBootInitStepsAsync },
+            { nameof(InitializeServicesAsync), InitializeServicesAsync },
+        };
 
         private static LifeTime _lifeTime;
         private static EntityContext _context;
@@ -50,14 +46,14 @@ namespace Game.Runtime.Services.Bootstrap
         {
             _lifeTime?.Terminate();
         }
-        
+
         private static async UniTask InitializeInnerAsync()
         {
             _lifeTime?.Terminate();
-            _lifeTime = new ();
+            _lifeTime = new();
             _context = new EntityContext();
             _context.AddTo(_lifeTime);
-            
+
             GameContext.Context = _context;
 
             foreach (var stage in _bootStages)
@@ -78,32 +74,6 @@ namespace Game.Runtime.Services.Bootstrap
             }
         }
 
-        private static async UniTask<bool> CheckAssetBundleCache(IContext lifeTime)
-        {
-            var version = PlayerPrefs.GetString(nameof(Application.version), string.Empty);
-            if (string.Equals(version, Application.version)) return true;
-
-            PlayerPrefs.SetString(nameof(Application.version), Application.version);
-
-#if !UNITY_WEBGL
-            Caching.ClearCache();
-#endif
-
-            return true;
-        }
-
-        private static async UniTask<bool> SettingAddressableParametersAsync(IContext lifeTime)
-        {
-            RemoteModelAsset.Reset();
-
-            var fileName = RemoteModelAsset.RemoteSettingsName;
-            var loadData = await StreamingAssetsUtils.LoadDataFromWeb(fileName);
-
-            if (loadData.success)
-                RemoteModelAsset.ModelAsset.ParseData(loadData.data);
-
-            return true;
-        }
 
         private static async UniTask<bool> InitializeAddressableAsync(IContext lifeTime)
         {
@@ -111,12 +81,12 @@ namespace Game.Runtime.Services.Bootstrap
             GameLog.Log("Addressable initialized");
             return true;
         }
-        
+
         private static async UniTask<bool> InitializeAsync(IContext context)
         {
             var settingsResource = await nameof(GameBootSettings)
                 .LoadAssetTaskAsync<GameBootSettings>(context.LifeTime);
-            
+
             if (settingsResource == null)
             {
                 settingsResource = Resources.Load<GameBootSettings>(string.Empty);
@@ -131,9 +101,14 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
 
-        private static async UniTask<bool> ExecuteBootStepsAsync(IContext context)
+        private static async UniTask<bool> ExecuteBootInitStepsAsync(IContext context)
         {
-            foreach (var bootCommand in _settings.bootCommands)
+            return await ExecuteBootStepsAsync(_settings.gameInitCommands, context);
+        }
+
+        private static async UniTask<bool> ExecuteBootStepsAsync(List<IGameBootCommand> bootCommands, IContext context)
+        {
+            foreach (var bootCommand in bootCommands)
             {
                 var result = await bootCommand.ExecuteAsync(context);
                 if (result.success) continue;
@@ -147,13 +122,26 @@ namespace Game.Runtime.Services.Bootstrap
             return true;
         }
 
+
         private static async UniTask<bool> InitializeServicesAsync(IContext context)
         {
-            var sources = _settings.dataSources
-                .Select(x => x.RegisterAsync(context))
-                .Concat(Enumerable.Repeat(_settings.defaultSource.RegisterAsync(context), 1));
-            
-            await UniTask.WhenAll(sources);
+            if (_settings.source.enabled == false)
+            {
+                GameLog.Log("GameBootstrap: Game Sources disabled");
+                return true;
+            }
+
+            try
+            {
+                var sources = await _settings
+                    .source
+                    .RegisterAsync(context);
+            }
+            catch (Exception e)
+            {
+                GameLog.LogException(e);
+                return false;
+            }
 
             return true;
         }

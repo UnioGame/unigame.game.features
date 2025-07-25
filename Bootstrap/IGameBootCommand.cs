@@ -1,4 +1,4 @@
-﻿namespace Vampire.Game.Modules.tma.features.Bootstrap
+﻿namespace UniGame.Features.Bootstrap
 {
     using System;
     using Cysharp.Threading.Tasks;
