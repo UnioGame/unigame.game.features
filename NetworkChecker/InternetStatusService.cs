@@ -6,7 +6,7 @@ namespace VN.Game.Runtime.Services
     using UniGame.GameFlow.Runtime;
     using UnityEngine;
     using UnityEngine.Networking;
-
+    
     [Serializable]
     public class InternetStatusService : GameService, INetworkStatusService
     {
@@ -30,6 +30,8 @@ namespace VN.Game.Runtime.Services
 
         public async UniTask FireNoInternetNotification(string error)
         {
+            if(LifeTime.IsTerminated) return;
+            
             _onInternetCheck.OnNext(new NetworkCheckResult()
             {
                 Duration = 0,
