@@ -15,7 +15,7 @@
     public class RemoteSettingsServiceSource : DataSourceAsset<IRemoteSettingsService>
     {
         public bool useRemoteSettings = true;
-        public RemoteAddressableSettingsCommand remoteCommand = new();
+        public RemoteSettingsLoader loader = new();
         
         protected override async UniTask<IRemoteSettingsService> CreateInternalAsync(IContext context)
         {
@@ -31,8 +31,8 @@
         
         public async UniTask<bool> LoadRemoteSettingsAsync(IContext context)
         {
-            var result  = await remoteCommand.ExecuteAsync(context);
-            return result.success;
+            var result  = await loader.LoadRemoteSettings();
+            return result;
         }
     }
 }

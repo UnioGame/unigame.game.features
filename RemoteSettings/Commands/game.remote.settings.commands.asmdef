@@ -1,5 +1,5 @@
 {
-    "name": "game.remote.settings.runtime",
+    "name": "game.remote.settings.commands",
     "rootNamespace": "",
     "references": [
         "GUID:9f8e6b2872ac2ca4683e584b9ba21f29",
@@ -12,8 +12,7 @@
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:2ed7c5348d9801a40a9fd7480dd6b981",
-        "GUID:6b4752707c91fb247b105471cfdf2b41",
-        "GUID:18e001e7783f9fa4f91ffb0f7d0ecfc5"
+        "GUID:6b4752707c91fb247b105471cfdf2b41"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -21,7 +20,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "UNIGAME_BOOTSTRAP_ENABLED"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
