@@ -10,7 +10,7 @@
     using UniModules.Editor;
 #endif
 
-    [CreateAssetMenu(menuName = "UniGame/Features/Game Boot Settings", fileName = nameof(GameBootSettings))]
+    [CreateAssetMenu(menuName = "UniGame/Bootstrap/GameBootSettings", fileName = nameof(GameBootSettings))]
     public class GameBootSettings : ScriptableObject
     {
         [Header("Service Sources")]
