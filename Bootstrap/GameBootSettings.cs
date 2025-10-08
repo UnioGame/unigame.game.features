@@ -1,6 +1,7 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Sirenix.OdinInspector;
     using UniGame.Context.Runtime;
     using UnityEngine;
@@ -29,6 +30,36 @@
         {
             this.SaveAsset();
         }
+
+        [Button]
+        public void Fill()
+        {
+            var sources = AssetEditorTools.GetAssets<DataSourceAsset>();
+            var descriptions = source.asyncSources;
+            descriptions.RemoveAll(x => x == null);
+            var results = new List<AsyncSourceDescription>(descriptions);
+
+            foreach (var sourceAsset in sources)
+            {
+                var foundSource = descriptions.FirstOrDefault(x => x.source.editorAsset == sourceAsset);
+                if(foundSource!=null) continue;
+                
+                var newDescription = new AsyncSourceDescription
+                {
+                    source = new AssetReferenceDataSource(sourceAsset.GetGUID()),
+                    enabled = true,
+                    awaitLoading = false
+                };
+                
+                results.Add(newDescription);
+            }
+
+            descriptions.Clear();
+            descriptions.AddRange(results);
+            
+            this.MarkDirty();
+        }
+        
 #endif
     }
 }
