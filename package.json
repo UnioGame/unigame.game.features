@@ -1,10 +1,10 @@
 {
-  "name": "unigame.game.features",
+  "name": "com.unigame.game.features",
   "author": "UniGame",
   "displayName": "UniGame Game Features",
   "description": "Game Features Collection",
   "unity": "2023.1",
-  "version": "2025.0.6",
+  "version": "2025.0.7",
   "keywords": [
     "UniGame",
     "Modules",
