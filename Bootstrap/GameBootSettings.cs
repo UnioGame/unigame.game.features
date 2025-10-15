@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Sirenix.OdinInspector;
+    using Sirenix.Utilities.Editor;
     using UniGame.Context.Runtime;
     using UnityEngine;
     using UniGame.Features.Bootstrap;
@@ -22,9 +23,25 @@
         [Header("Commands")]
         [SerializeReference]
         [Tooltip("Commands to execute before game initialization, e.g. loading assets, initializing services, etc.")]
+        [ListDrawerSettings(OnEndListElementGUI = nameof(EndDrawListElement))]
         public List<IGameBootCommand> gameInitCommands = new();
 
+        
+        private void EndDrawListElement(int index)
+        {
 #if UNITY_EDITOR
+            if(gameInitCommands.Count <= index) return;
+            SirenixEditorGUI.EndBox();
+            if (!SirenixEditorGUI.Button("open", ButtonSizes.Medium)) return;
+            var command = gameInitCommands[index];
+            var type = command?.GetType();
+            if (type == null) return;
+            type.OpenEditorScript();
+#endif
+        }
+
+#if UNITY_EDITOR
+        
         [Button]
         public void Save()
         {
