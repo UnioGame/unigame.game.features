@@ -3,12 +3,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using Sirenix.OdinInspector;
-    using Sirenix.Utilities.Editor;
     using UniGame.Context.Runtime;
     using UnityEngine;
     using UniGame.Features.Bootstrap;
 
 #if UNITY_EDITOR
+
+#if ODIN_INSPECTOR
+    using Sirenix.Utilities.Editor;
+#endif
+    
     using UniModules.Editor;
 #endif
 
