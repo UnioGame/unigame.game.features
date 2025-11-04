@@ -57,7 +57,8 @@
         {
             var sources = AssetEditorTools.GetAssets<DataSourceAsset>();
             var descriptions = source.asyncSources;
-            descriptions.RemoveAll(x => x == null);
+            descriptions.RemoveAll(x => x == null || x.source.editorAsset == null);
+            
             var results = new List<AsyncSourceDescription>(descriptions);
 
             foreach (var sourceAsset in sources)
