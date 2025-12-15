@@ -11,7 +11,6 @@ namespace VN.Game.Runtime.Services
         {
             "https://www.google.com",
             "https://ya.ru",
-            "https://ft.kontora.games/client/netalive"
         };
     }
 }
