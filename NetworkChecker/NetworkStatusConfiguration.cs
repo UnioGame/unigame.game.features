@@ -1,4 +1,4 @@
-namespace VN.Game.Runtime.Services
+namespace UniGame.Runtime.GameAuth
 {
     using System;
 
