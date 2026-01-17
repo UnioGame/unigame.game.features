@@ -1,19 +1,20 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
+    using Sirenix.OdinInspector;
     using System.Collections.Generic;
     using System.Linq;
-    using Sirenix.OdinInspector;
     using UniGame.Context.Runtime;
     using UnityEngine;
     using UniGame.Features.Bootstrap;
 
 #if UNITY_EDITOR
-
+    using UniGame.AddressableTools.Editor;
+    using UniModules.Editor;
+    
 #if ODIN_INSPECTOR
     using Sirenix.Utilities.Editor;
 #endif
     
-    using UniModules.Editor;
 #endif
 
     [CreateAssetMenu(menuName = "UniGame/Bootstrap/GameBootSettings", fileName = nameof(GameBootSettings))]
@@ -72,6 +73,9 @@
                     enabled = true,
                     awaitLoading = false
                 };
+
+                if (!sourceAsset.IsAddressableAsset())
+                    sourceAsset.MakeAddressable();
                 
                 results.Add(newDescription);
             }
