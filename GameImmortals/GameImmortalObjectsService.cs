@@ -34,6 +34,7 @@
                 if(asset == null) continue;
                 var instance = UnityEngine.Object.Instantiate(asset);
                 Object.DontDestroyOnLoad(instance);
+                instance.DestroyWith(LifeTime);
                 pawns.Add(instance);
             }
         }
