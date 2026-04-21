@@ -31,7 +31,7 @@ namespace Game.Runtime.Services.Bootstrap
         public static ILifeTime LifeTime => _lifeTime;
         public static IContext Context => _context;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void InitializeGame()
         {
             InitializeInnerAsync().Forget();
@@ -47,10 +47,11 @@ namespace Game.Runtime.Services.Bootstrap
             _lifeTime?.Terminate();
         }
 
-        private static async UniTask InitializeInnerAsync()
+        public static async UniTask InitializeInnerAsync()
         {
             _lifeTime?.Terminate();
             _lifeTime = new();
+            
             _context = new EntityContext();
             _context.AddTo(_lifeTime);
 
