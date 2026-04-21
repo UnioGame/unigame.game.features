@@ -31,25 +31,33 @@ namespace Game.Runtime.Services.Bootstrap
         public static ILifeTime LifeTime => _lifeTime;
         public static IContext Context => _context;
 
-        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void InitializeGame()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void AutoInitializeGame()
         {
-            InitializeInnerAsync().Forget();
+#if UNIGAME_BOOTSTRAP_ENABLED
+            InitializeGame();
+#endif
         }
-
+        
         public static void Restart()
         {
-            InitializeInnerAsync().Forget();
+            InitializeGameAsync().Forget();
         }
 
         public static void Dispose()
         {
             _lifeTime?.Terminate();
         }
-
-        public static async UniTask InitializeInnerAsync()
+        
+        public static void InitializeGame()
         {
-            _lifeTime?.Terminate();
+            InitializeGameAsync().Forget();
+        }
+
+        public static async UniTask InitializeGameAsync()
+        {
+            Dispose();
+            
             _lifeTime = new();
             
             _context = new EntityContext();
@@ -134,9 +142,7 @@ namespace Game.Runtime.Services.Bootstrap
 
             try
             {
-                var sources = await _settings
-                    .source
-                    .RegisterAsync(context);
+                var sources = await _settings.source.RegisterAsync(context);
             }
             catch (Exception e)
             {

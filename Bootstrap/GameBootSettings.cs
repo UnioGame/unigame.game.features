@@ -30,7 +30,6 @@
         [Tooltip("Commands to execute before game initialization, e.g. loading assets, initializing services, etc.")]
         [ListDrawerSettings(OnEndListElementGUI = nameof(EndDrawListElement))]
         public List<IGameBootCommand> gameInitCommands = new();
-
         
         private void EndDrawListElement(int index)
         {
