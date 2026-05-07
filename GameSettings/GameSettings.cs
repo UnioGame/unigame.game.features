@@ -1,9 +1,12 @@
 ﻿namespace Game.Code.Services.GameSettingsService
 {
     using System;
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+        using Sirenix.OdinInspector;
+#endif
+    
     [Serializable]
     public class GameSettings
     {
@@ -21,7 +24,9 @@
         [Tooltip("enable screen scale for perfomance optimization")]
         public bool enableScreenScale = false;
         
+#if ODIN_INSPECTOR
         [ShowIf(nameof(enableScreenScale))]
+#endif
         [Tooltip("screen scale for perfomance optimization")]
         [Range(0.2f, 1.0f)]
         public float screenScale = 1.0f;

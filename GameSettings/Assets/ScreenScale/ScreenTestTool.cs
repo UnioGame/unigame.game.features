@@ -4,11 +4,14 @@ namespace GameSettings.Test
 {
     using Cysharp.Threading.Tasks;
     using Game.Code.Services.GameSettingsService;
-    using Sirenix.OdinInspector;
     using TMPro;
     using UniGame.Context.Runtime;
     using UnityEngine.UI;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     public class ScreenTestTool : MonoBehaviour
     {
         public TextMeshProUGUI info;
@@ -67,7 +70,9 @@ namespace GameSettings.Test
                         $"Scale: {_gameSettingsService.ScreenScale.Value}";
         }
         
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void Apply()
         {
             if(_gameSettingsService == null)

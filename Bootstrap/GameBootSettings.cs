@@ -1,6 +1,6 @@
 ﻿namespace Game.Runtime.Bootstrap
 {
-    using Sirenix.OdinInspector;
+    
     using System.Collections.Generic;
     using System.Linq;
     using UniGame.Context.Runtime;
@@ -12,6 +12,7 @@
     using UniModules.Editor;
     
 #if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
     using Sirenix.Utilities.Editor;
 #endif
     
@@ -21,19 +22,23 @@
     public class GameBootSettings : ScriptableObject
     {
         [Header("Service Sources")]
+#if ODIN_INSPECTOR
         [InlineProperty]
         [HideLabel]
+#endif
         public AsyncContextSource source = new();
         
         [Header("Commands")]
         [SerializeReference]
         [Tooltip("Commands to execute before game initialization, e.g. loading assets, initializing services, etc.")]
+#if ODIN_INSPECTOR
         [ListDrawerSettings(OnEndListElementGUI = nameof(EndDrawListElement))]
+#endif
         public List<IGameBootCommand> gameInitCommands = new();
         
         private void EndDrawListElement(int index)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && ODIN_INSPECTOR
             if(gameInitCommands.Count <= index) return;
             SirenixEditorGUI.EndBox();
             if (!SirenixEditorGUI.Button("open", ButtonSizes.Medium)) return;
@@ -46,13 +51,17 @@
 
 #if UNITY_EDITOR
         
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void Save()
         {
             this.SaveAsset();
         }
 
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void Fill()
         {
             var sources = AssetEditorTools.GetAssets<DataSourceAsset>();

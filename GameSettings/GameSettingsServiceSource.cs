@@ -1,11 +1,15 @@
 ﻿namespace Game.Code.Services.GameSettingsService
 {
     using Cysharp.Threading.Tasks;
-    using Sirenix.OdinInspector;
+    
     using UniGame.Context.Runtime;
     using UniGame.Core.Runtime;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
 #if UNITY_EDITOR
     using UnityEditor;
 #endif
@@ -16,7 +20,9 @@
     [CreateAssetMenu(menuName = "Game/Services/Settings/GameSettings Service Source", fileName = "GameSettings Service Source")]
     public class GameSettingsServiceSource : DataSourceAsset<IGameSettingsService>
     {
+#if ODIN_INSPECTOR
         [InlineEditor]
+#endif
         public GameSettingsAsset settingsAsset;
         
         private GameSettingsService _service;
@@ -50,7 +56,9 @@
             }
         }
         
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void ApplySettings()
         {
             var settingsData = Instantiate(settingsAsset);

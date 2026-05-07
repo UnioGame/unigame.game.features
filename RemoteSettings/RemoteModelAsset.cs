@@ -3,11 +3,15 @@
     using System;
     using Newtonsoft.Json;
     using Runtime;
-    using Sirenix.OdinInspector;
+   
     using UniModules;
     using UnityEngine;
     using Object = UnityEngine.Object;
 
+#if ODIN_INSPECTOR
+     using Sirenix.OdinInspector;
+#endif
+    
 #if UNITY_EDITOR
     using UnityEditor;
 #endif
@@ -29,13 +33,17 @@
         public const string RemoteSettingsName = "RemoteSettings.json";
         public const string EmptyPath = "[EMPTY_REMOTE_ASSET]";
 
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void ResetRemote()
         {
             Reset();
         }
 
+#if ODIN_INSPECTOR
         [Button]
+#endif
         public void RefreshPreview()
         {
             _demoUrl = GetAddressableRemoteUrl(this.data);
@@ -116,15 +124,20 @@
         
         #region inspector 
         
+#if ODIN_INSPECTOR
         [InlineProperty]
         [HideLabel]
         [OnValueChanged(nameof(RefreshPreview))]
         [OnInspectorInit(nameof(RefreshPreview))]
+#endif
+
         public RemoteGameModel data = new();
 
         [NonSerialized]
+#if ODIN_INSPECTOR
         [OnInspectorGUI]
         [ReadOnly]
+#endif
         private string _demoUrl = string.Empty;
         
         #endregion

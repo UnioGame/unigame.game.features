@@ -2,9 +2,12 @@
 {
     using System;
     using Newtonsoft.Json;
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     [Serializable]
     public class RemoteGameModel : IRemoteModel
     {
@@ -25,7 +28,9 @@
         public bool overrideAddressableUrl = false;
         
         [JsonProperty("AddressableUrl")]
+#if ODIN_INSPECTOR
         [ShowIf(nameof(overrideAddressableUrl))]
+#endif
         public string addressableUrl = string.Empty;
         
         [JsonProperty("RemoteDataPath")]
