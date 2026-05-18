@@ -22,7 +22,7 @@
     public class GameBootSettings : ScriptableObject
     {
         [Header("Service Sources")]
-#if ODIN_INSPECTOR
+#if UNITY_EDITOR && ODIN_INSPECTOR
         [InlineProperty]
         [HideLabel]
 #endif
@@ -31,7 +31,7 @@
         [Header("Commands")]
         [SerializeReference]
         [Tooltip("Commands to execute before game initialization, e.g. loading assets, initializing services, etc.")]
-#if ODIN_INSPECTOR
+#if UNITY_EDITOR && ODIN_INSPECTOR
         [ListDrawerSettings(OnEndListElementGUI = nameof(EndDrawListElement))]
 #endif
         public List<IGameBootCommand> gameInitCommands = new();
