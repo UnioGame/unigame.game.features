@@ -79,7 +79,7 @@
                 {
                     source = new AssetReferenceDataSource(sourceAsset.GetGUID()),
                     enabled = true,
-                    awaitLoading = false
+                    awaitLoading = false    
                 };
 
                 if (!sourceAsset.IsAddressableAsset())
