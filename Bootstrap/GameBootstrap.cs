@@ -38,6 +38,13 @@ namespace Game.Runtime.Services.Bootstrap
             InitializeGame();
 #endif
         }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RegisterApplicationQuit()
+        {
+            Application.quitting -= Dispose;
+            Application.quitting += Dispose;
+        }
         
         public static void Restart()
         {
