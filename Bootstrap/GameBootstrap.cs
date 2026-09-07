@@ -48,7 +48,12 @@ namespace Game.Runtime.Services.Bootstrap
         
         public static void Restart()
         {
-            InitializeGameAsync().Forget();
+            RestartAsync().Forget();
+        }
+
+        public static UniTask RestartAsync()
+        {
+            return InitializeGameAsync();
         }
 
         public static void Dispose()
