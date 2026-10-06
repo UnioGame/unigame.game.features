@@ -34,8 +34,8 @@ namespace Game.Runtime.Services.Bootstrap
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void AutoInitializeGame()
         {
-#if UNIGAME_BOOTSTRAP_ENABLED
-            InitializeGame();
+#if UNIGAME_BOOTSTRAP_ENABLED && !UNITY_SERVER
+            if (Environment.GetEnvironmentVariable("UNIGAME_BOOTSTRAP_DISABLED") != "1") InitializeGame();
 #endif
         }
 
